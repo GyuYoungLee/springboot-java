@@ -1,7 +1,7 @@
 ### 학습 내용
 
-  * Controller
-  * Swagger
+  * controller
+  * swagger
 
 <br>
 

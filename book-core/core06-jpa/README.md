@@ -1,7 +1,7 @@
 ### 학습 내용
 
-  * Layered architecture
-  * Lombok
+  * layered architecture
+  * lombok
 
 <br>
 
