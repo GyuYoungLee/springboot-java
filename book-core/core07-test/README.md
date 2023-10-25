@@ -1,7 +1,7 @@
 ### 학습 내용
 
-  * Layered Architecture
-  * Lombok
+  * 통합 테스트
+  * 단위 테스트
 
 <br>
 
