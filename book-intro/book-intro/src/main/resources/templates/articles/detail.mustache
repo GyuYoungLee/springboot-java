@@ -1,0 +1,45 @@
+{{>layouts/header}}
+
+<div class="container">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Title</th>
+            <th scope="col">Content</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#article}}
+            <tr>
+                <td>{{id}}</td>
+                <td>{{title}}</td>
+                <td>{{content}}</td>
+            </tr>
+        {{/article}}
+        </tbody>
+    </table>
+
+    <a href="/articles/{{article.id}}/edit" class="btn btn-primary">수정</a>
+    <!-- 글 등록 버튼 -->
+    <button class="btn btn-danger" id="delete-btn" data-id="{{article.id}}">삭제</button>
+    <a href="/articles" class="btn btn-secondary">목록</a>
+</div>
+
+{{>layouts/footer}}
+
+<script>
+    // 글 삭제
+    (() => {
+        const deleteBtn = document.querySelector('#delete-btn');
+        deleteBtn.addEventListener('click', () => {
+            const id = deleteBtn.dataset.id;
+
+            fetch(`/api/articles/${id}`, {
+                method: 'DELETE',
+            }).then(r => {
+                location.replace('/articles');
+            })
+        })
+    })();
+</script>

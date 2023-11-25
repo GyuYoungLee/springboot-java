@@ -1,0 +1,26 @@
+{{>layouts/header}}
+
+<div class="container">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Title</th>
+            <th scope="col">Content</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#articleList}}
+            <tr>
+                <td>{{id}}</td>
+                <td><a href="/articles/{{id}}">{{title}}</a></td>
+                <td>{{content}}</td>
+            </tr>
+        {{/articleList}}
+        </tbody>
+    </table>
+
+    <a href="/articles/new" class="btn btn-primary">새글</a>
+</div>
+
+{{>layouts/footer}}

@@ -1,0 +1,44 @@
+{{>layouts/header}}
+
+<div class="container">
+    <div>
+        <div class="mb-3">
+            <label for="title" class="form-label">title</label>
+            <input type="text" class="form-control" id="title">
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label">content</label>
+            <textarea class="form-control" id="content"></textarea>
+        </div>
+
+        <!-- 글 등록 버튼 -->
+        <button class="btn btn-primary" id="create-btn">새글</button>
+        <a href="/articles" class="btn btn-secondary">취소</a>
+    </div>
+</div>
+
+{{>layouts/footer}}
+
+<script>
+    // 글 등록
+    (() => {
+       const createBtn = document.querySelector('#create-btn');
+       createBtn.addEventListener('click', () => {
+           const title = document.querySelector('#title').value;
+           const content = document.querySelector('#content').value;
+
+           fetch('/api/articles', {
+               method: 'POST',
+               headers: {
+                   'content-type': 'application/json',
+               },
+               body: JSON.stringify({
+                   title,
+                   content,
+               }),
+           }).then(r => r.json()).then(article => {
+               location.replace(`/articles/${article.id}`);
+           })
+       })
+    })();
+</script>
