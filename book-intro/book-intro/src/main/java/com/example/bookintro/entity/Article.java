@@ -1,10 +1,10 @@
 package com.example.bookintro.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -18,6 +18,10 @@ public class Article {
     private String title;
     @Setter
     private String content;
+
+    @OneToMany(mappedBy = "article", fetch = FetchType.EAGER)
+    @ToString.Exclude
+    private final List<Comment> commentList = new ArrayList<>();
 
     @Builder
     public Article(Long id, String title, String content) {
