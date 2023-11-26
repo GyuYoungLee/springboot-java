@@ -24,9 +24,79 @@
     <!-- 글 등록 버튼 -->
     <button class="btn btn-danger" id="delete-btn" data-id="{{article.id}}">삭제</button>
     <a href="/articles" class="btn btn-secondary">목록</a>
+
+    <div class="mt-5">
+        {{#commentList}}
+            <div class="card mb-3">
+                <div class="card-header">{{nickname}}</div>
+                <div class="card-body">
+                    <p class="card-text">{{body}}</p>
+
+                    <button type="button" class="btn btn-sm btn-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#exampleModal"
+                            data-nickname="{{nickname}}"
+                            data-body="{{body}}"
+                            data-id="{{id}}">수정
+                    </button>
+
+                    <!-- 댓글 삭제 버튼 -->
+                    <button class="btn btn-sm btn-danger"
+                            id="comment-delete-btn"
+                            data-id="{{id}}">삭제
+                    </button>
+                </div>
+            </div>
+        {{/commentList}}
+
+        <div class="mb-5">
+            <div class="mb-1">
+                <label for="title" class="form-label">title</label>
+                <input type="text" class="form-control" id="nickname">
+            </div>
+            <div class="mb-1">
+                <label for="content" class="form-label">content</label>
+                <textarea class="form-control" id="body"></textarea>
+            </div>
+
+            <!-- 댓글 등록 버튼 -->
+            <button class="btn btn-sm btn-primary"
+                    id="comment-create-btn"
+                    data-id="{{article.id}}">등록
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">댓글 수정</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-1">
+                    <label for="title" class="form-label">title</label>
+                    <input type="text" class="form-control" id="edit-nickname">
+                </div>
+                <div class="mb-1">
+                    <label for="content" class="form-label">content</label>
+                    <textarea class="form-control" id="edit-body"></textarea>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="comment-update-btn">수정</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 {{>layouts/footer}}
+
+
 
 <script>
     // 글 삭제
@@ -39,6 +109,75 @@
                 method: 'DELETE',
             }).then(r => {
                 location.replace('/articles');
+            })
+        })
+    })();
+
+    // 댓글 등록
+    (() => {
+        const commentCreateBtn = document.querySelector('#comment-create-btn');
+        commentCreateBtn.addEventListener('click', () => {
+            const nickname = document.querySelector('#nickname').value;
+            const body = document.querySelector('#body').value;
+            const id = commentCreateBtn.dataset.id;
+
+            fetch(`/api/articles/${id}/comments`, {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body: JSON.stringify({
+                    nickname,
+                    body,
+                }),
+            }).then(r => r.json()).then(article => {
+                location.reload();
+            })
+        })
+    })();
+
+    // 댓글 삭제
+    (() => {
+        const deleteBtnList = document.querySelectorAll('#comment-delete-btn');
+        deleteBtnList.forEach(deleteBtn => {
+            deleteBtn.addEventListener('click', () => {
+                const id = deleteBtn.dataset.id;
+
+                fetch(`/api/comments/${id}`, {
+                    method: 'DELETE',
+                }).then(r => {
+                    location.reload();
+                })
+            })
+        })
+    })();
+
+    // 댓글 수정
+    (() => {
+        const exampleModal = document.getElementById('exampleModal')
+        exampleModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget
+            document.querySelector('#edit-nickname').value = button.dataset.nickname;
+            document.querySelector('#edit-body').value = button.dataset.body;
+
+            const commentUpdateBtn = document.querySelector('#comment-update-btn');
+            commentUpdateBtn.addEventListener('click', () => {
+                const nickname = document.querySelector('#edit-nickname').value;
+                const body = document.querySelector('#edit-body').value;
+                const id = button.dataset.id;
+
+                fetch(`/api/comments/${id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'content-type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        nickname,
+                        body,
+                    }),
+                }).then(r => r.json()).then(article => {
+                    location.reload();
+                })
             })
         })
     })();

@@ -1,6 +1,7 @@
 package com.example.bookintro.service;
 
 import com.example.bookintro.entity.Article;
+import com.example.bookintro.entity.Comment;
 import com.example.bookintro.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArticleService {
     private final ArticleRepository articleRepository;
+    private final CommentService commentService;
 
     // 생성
     public Article createArticle(Article article) {
@@ -41,6 +43,11 @@ public class ArticleService {
     public Article deleteArticle(long id) {
         Article target = articleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 글 없음"));
+
+        List<Comment> commentList = commentService.getCommentList(id);
+        commentList.forEach(comment -> {
+            commentService.deleteComment(comment.getId());
+        });
 
         articleRepository.delete(target);
         return target;

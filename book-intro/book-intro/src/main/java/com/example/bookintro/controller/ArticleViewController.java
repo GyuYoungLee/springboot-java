@@ -1,7 +1,9 @@
 package com.example.bookintro.controller;
 
 import com.example.bookintro.entity.Article;
+import com.example.bookintro.entity.Comment;
 import com.example.bookintro.service.ArticleService;
+import com.example.bookintro.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArticleViewController {
     private final ArticleService articleService;
+    private final CommentService commentService;
 
     // 목록 화면
     @GetMapping("/articles")
@@ -27,7 +30,9 @@ public class ArticleViewController {
     @GetMapping("/articles/{id}")
     public String detail(@PathVariable long id, Model model) {
         Article article = articleService.getArticle(id);
+        List<Comment> commentList = commentService.getCommentList(id);
         model.addAttribute("article", article);
+        model.addAttribute("commentList", commentList);
         return "articles/detail";
     }
 
